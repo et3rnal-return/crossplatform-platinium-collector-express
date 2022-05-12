@@ -1,13 +1,17 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 const psn = require("psn-api");
+const trophies = require('./src/trophies')
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
-
-app.get('/', (req: Request, res: Response) => {
+app.use(express.json());
+app.use('/trophies', trophies);
+console.log(trophies)
+// app.use(cors());
+app.get('/asd', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
 });
 
