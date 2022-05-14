@@ -1,19 +1,8 @@
 import {GetAchievementsInput, PlatiniumTrophy} from "../types";
 
 export abstract class PlatformHandler {
-    abstract getUserTrophies(input: GetAchievementsInput): PlatiniumTrophy[];
+    abstract getUserTrophies(input: GetAchievementsInput): Promise<PlatiniumTrophy[] | undefined>;
 }
 
-export class PSNHandler implements PlatformHandler {
-    getUserTrophies(input: GetAchievementsInput): PlatiniumTrophy[] {
-        return [];
-    }
 
-}
 
-export class SteamHandler implements PlatformHandler {
-    getUserTrophies(input: GetAchievementsInput): PlatiniumTrophy[] {
-        return [];
-    }
-
-}
