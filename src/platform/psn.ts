@@ -7,6 +7,7 @@ import {
     getUserTitles,
     makeUniversalSearch
 } from "psn-api";
+import {nppso} from "../nppso";
 
 export class PSNHandler implements PlatformHandler {
 
@@ -20,12 +21,14 @@ export class PSNHandler implements PlatformHandler {
         );
 
         if (!universalSearchResponse) {
+            console.log("no universal search response")
             return undefined;
         }
 
         let accountID = input.id === "SingedSpinner" ? "me" : universalSearchResponse.domainResponses[0].results[0].socialMetadata.accountId;
         const response = await getUserTitles(authorization, accountID);
         if (!response || !response.trophyTitles) {
+            console.log("no get user titles response")
             return undefined;
         }
         const trophies: PlatiniumTrophy[] = [];
@@ -37,11 +40,15 @@ export class PSNHandler implements PlatformHandler {
             })
         })
 
+        console.log(trophies);
         return trophies;
     }
 
     async getAuthorization() {
-        const myNpsso = "wEZJ4jexlvYy3p1CN4oiY1yKDFttxCgmr8SRUsD4V7vR87SSqF3p4LFJXjFoHc6Z";
+        const myNpsso = nppso;
+        if(!myNpsso) {
+            throw new Error("no nppso");
+        }
         const accessCode = await exchangeNpssoForCode(myNpsso);
         const authorization = await exchangeCodeForAccessToken(accessCode);
         const now = new Date();
@@ -55,7 +62,7 @@ export class PSNHandler implements PlatformHandler {
             const updatedAuthorization = await exchangeRefreshTokenForAuthTokens(
                 authorization.refreshToken
             );
-
+            console.log(updatedAuthorization);
             return updatedAuthorization;
         }
 

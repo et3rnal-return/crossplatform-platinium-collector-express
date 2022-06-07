@@ -1,4 +1,14 @@
-export type Platform = "PSN" | "Steam";
+export const platforms = ['PSN', 'Steam'] as const;
+export type Platform = typeof platforms[number];
+
+export function platformValidation(platform: string): Platform {
+    const validPlatform = platforms.find((validPlatform) => validPlatform === platform);
+    if (validPlatform) {
+        return validPlatform;
+    }
+    throw Error("Invalid platform, available platforms are " + platforms);
+}
+
 
 export type GetAchievementsInput = {
     id: string,
@@ -20,8 +30,8 @@ export type PlatiniumTrophy = {
 export type SteamGame = {
     appid: string;
     name: string;
-    img_icon_url:string;
-    img_logo_url:string;
+    img_icon_url: string;
+    img_logo_url: string;
     playtime_forever: number;
     playtime_windows_forever: number;
     playtime_mac_forever: number;

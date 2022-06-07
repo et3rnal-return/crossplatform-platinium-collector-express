@@ -1,6 +1,7 @@
 import {GetAchievementsInput, PlatiniumTrophy, SteamAchievement, SteamGame, SteamGameData} from "../types";
 import {PlatformHandler} from "./platform";
 
+
 export class SteamHandler implements PlatformHandler {
     async getUserTrophies(input: GetAchievementsInput): Promise<PlatiniumTrophy[] | undefined> {
         try {
@@ -27,13 +28,12 @@ export class SteamHandler implements PlatformHandler {
                     completionPercentage: completed / game.achievements.length,
                     game: {
                         name: game.name,
-                        imgSrc: game.img_icon_url
+                        imgSrc: `http://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_logo_url}.jpg`
                     },
                     timePlayed: game.playtime_forever.toString()
                 })
             }
 
-            console.log(platinumTrophies)
             return platinumTrophies;
 
         } catch (e) {

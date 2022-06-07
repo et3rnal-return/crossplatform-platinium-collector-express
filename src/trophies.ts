@@ -1,4 +1,4 @@
-import {GetAchievementsInput, Platform} from "./types";
+import {GetAchievementsInput, Platform, platforms, platformValidation} from "./types";
 import {PlatformHandler} from "./platform/platform";
 import {SteamHandler} from "./platform/steam";
 import {PSNHandler} from "./platform/psn";
@@ -8,14 +8,28 @@ const router = express.Router();
 const port = process.env.PORT;
 
 router.get('/', async (req: any, res: { send: (arg0: string) => void; }) => {
-    if (!req.body.id && !req.body.platform) {
+
+    const params = new URLSearchParams(req.query);
+    const id = params.get("id");
+    const platform = params.get("platform");
+
+    if (!id || !platform) {
         res.send(JSON.stringify({"error": "Request needs to contain id and platform"}));
         return;
     }
-    const data = req.body as GetAchievementsInput;
-    const handler = getPlatformHandler('PSN');
-    handler.getUserTrophies(req.body);
-    res.send('Birds home page')
+
+    try {
+        console.log(id, platform)
+        const validPlatform = platformValidation(platform);
+        const handler = getPlatformHandler(validPlatform);
+        const response = await handler.getUserTrophies({id, platform: validPlatform});
+        console.log(handler);
+        console.log("response: ", response);
+        res.send(JSON.stringify(response));
+    } catch (e) {
+        res.send(JSON.stringify(e));
+        return;
+    }
 })
 
 
